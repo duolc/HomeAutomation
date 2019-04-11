@@ -9,8 +9,8 @@ var upload = multer({ dest: '/tmp/' });
 
 //User Settings
 //Your IFTTT Webhook Key
-var iftttKey = '/with/key/'+'{{YOURKEYHERE}}';
-var deviceId = '{{PLEX DEVICE UUID HERE}}';
+var iftttKey = '/with/key/'+'{{YourKeyHere}}';
+var deviceIP = '{{DeviceIPHere}}';
 
 
 var iftttLink = 'https://maker.ifttt.com/trigger/';
@@ -21,13 +21,15 @@ app.post('/', upload.single('thumb'), function (req, res, next) {
     var stop = 'media.stop';
     var pause = 'media.pause';
     var resume = 'media.resume';
+    var timeStamp = new Date();
 
-    console.log("    Device:  ", payload.Player.uuid);
-    console.log("Media Type:  ", payload.Metadata.type);
-    console.log("     Event:  ", payload.event);
+    console.log(" TimeStamp:  "+timeStamp);
+    console.log("    Device:  "+payload.Player.publicAddress);
+    console.log("Media Type:  "+payload.Metadata.type);
+    console.log("     Event:  "+payload.event);
 
 //Shield TV Theater Control
-  if (payload.Player.uuid == deviceId && payload.Metadata.type != 'track') {
+  if (payload.Player.publicAddress == deviceIP && payload.Metadata.type != 'track') {
         if (payload.event == play || payload.event == resume) {
             request.post(iftttLink+play+iftttKey);
         //Log Action
